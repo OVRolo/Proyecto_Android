@@ -25,7 +25,7 @@ public class pagina2 extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        tv_datos.setText(usu.getHabitante());
+        tv_datos.setText(usu.getNombre());
 
 
     }

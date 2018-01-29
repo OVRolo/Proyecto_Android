@@ -12,13 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,6 +22,10 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -62,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             URL url = null;
             try {
-                url = new URL("http://10.21.101.32:8080/CRUD.asmx/getTable");
+                url = new URL("http://10.21.101.31:8080/CRUD.asmx/getTable");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -84,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     out.append(line);
                 }
                 String res = out.toString();
-                System.out.println(out.toString());   //Prints the string content read from input stream
+                System.out.println(out.toString()); //Prints the string content read from input stream
                 reader.close();
 
             } catch (IOException e) {
