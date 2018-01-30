@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,7 +23,9 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             URL url = null;
             try {
-                url = new URL("http://10.21.101.31:8080/CRUD.asmx/getTable");
+                url = new URL("http://10.21.101.24:8080/CRUD.asmx/getTable");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -67,13 +70,14 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestProperty("Content-Type","application/json");
                 urlConnection.setRequestMethod("POST");
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             try {
-                InputStream in = urlConnection.getInputStream();
+               InputStream in = urlConnection.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                 StringBuilder out = new StringBuilder();
                 String line;
@@ -84,7 +88,56 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(out.toString()); //Prints the string content read from input stream
                 reader.close();
 
+                JSONObject jsonObj = new JSONObject(res);
+
+              /*  JSONObject jsonObj = null;
+                try {
+                    jsonObj = XML.toJSONObject(res);
+                } catch (JSONException e) {
+                    Log.e("JSON exception", e.getMessage());
+                    e.printStackTrace();
+                }*/
+                Iterator<String> keys = jsonObj.keys();
+                String key = keys.next();
+
+               JSONArray data= jsonObj.getJSONArray(key);
+               JSONObject dat=data.getJSONObject(0);
+                String  nombre=dat.get("nombre").toString();
+                Log.i("nombre", "dato "+nombre);
+
+
+               /*Object datos;
+
+                try {
+
+                    //Obtenemos los objetos dentro del objeto principal.
+                    Iterator<String> keys = jsonObj.keys();
+
+                    while (keys.hasNext())
+                    {
+                        // obtiene el nombre del objeto.
+                        String key = keys.next();
+                        Log.i("Parser", "objeto : " + key);
+                        JSONObject jsonObject = jsonObj.getJSONObject(key);
+
+                        //obtiene valores dentro del objeto.
+                       datos = jsonObject.get("Usuario");
+
+
+                        //Imprimimos los valores.
+                        Log.i("Parser", ""+datos);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("Parser", e.getMessage());
+                }*/
+
+
+
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             } finally {
                 urlConnection.disconnect();
