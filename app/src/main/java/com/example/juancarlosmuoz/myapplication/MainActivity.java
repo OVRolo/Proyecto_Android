@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,7 +25,9 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,9 +105,25 @@ public class MainActivity extends AppCompatActivity {
                 String key = keys.next();
 
                JSONArray data= jsonObj.getJSONArray(key);
-               JSONObject dat=data.getJSONObject(0);
-                String  nombre=dat.get("nombre").toString();
-                Log.i("nombre", "dato "+nombre);
+             //  JSONObject dat=data.getJSONObject(0);
+               // String  nombre=dat.get("nombre").toString();
+                //Log.i("nombre", "dato "+nombre);
+
+                List<Usuario> usu=new ArrayList<Usuario>();
+
+                for (int i=0; i<data.length(); i++){
+                    JSONObject dat=data.getJSONObject(i);
+
+                    int  id=(int)dat.get("Id");
+                    String  nombre=dat.get("nombre").toString();
+                    String  apellido=dat.get("apellido").toString();
+                    String  telefono=dat.get("telefono").toString();
+                    String  puesto=dat.get("puesto").toString();
+                    String  email=dat.get("email").toString();
+                    int  organizacion_id=(int)dat.get("organizacion_id");
+
+                    usu.add(new Usuario(id,nombre,apellido,telefono,puesto,email,organizacion_id));
+                }
 
 
                /*Object datos;

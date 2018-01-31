@@ -27,4 +27,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation files('src/main/java/ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar')
     implementation files('src/main/java/java-json.jar')
+    implementation files('src/main/java/gson-2.6.2-javadoc.jar')
+    implementation files('src/main/java/gson-2.2.2.jar')
 }
