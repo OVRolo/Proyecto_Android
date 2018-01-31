@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -28,6 +28,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,14 +38,9 @@ import org.json.XML;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String[] paises = { "Argentina", "Chile", "Paraguay", "Bolivia",
-            "Peru", "Ecuador", "Brasil", "Colombia", "Venezuela", "Uruguay" };
-    private String[] habitantes = { "40000000", "17000000", "6500000",
-            "10000000", "30000000", "14000000", "183000000", "44000000",
-            "29000000", "3500000" };
     private TextView tv1;
     private ListView lv1;
-    public Usuario usu;
+    getInformacion getInfo=new getInformacion();
 
 
 
@@ -59,12 +55,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        new LongOperation().execute("");
+         getInfo.execute("");
     }
-    private class LongOperation extends AsyncTask<String, Void, String> {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        try {
+            List<Usuario>usu= getInfo.get();
+
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        } catch (ExecutionException e1) {
+            e1.printStackTrace();
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private class getInformacion extends AsyncTask<String, Void, List<Usuario>> {
         @Override
-        protected String doInBackground(String... params) {
+        protected List<Usuario> doInBackground(String... params) {
             URL url = null;
+            List<Usuario> usu=new ArrayList<Usuario>();
+
             try {
                 url = new URL("http://10.21.101.24:8080/CRUD.asmx/getTable");
             } catch (MalformedURLException e) {
@@ -109,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                // String  nombre=dat.get("nombre").toString();
                 //Log.i("nombre", "dato "+nombre);
 
-                List<Usuario> usu=new ArrayList<Usuario>();
+
 
                 for (int i=0; i<data.length(); i++){
                     JSONObject dat=data.getJSONObject(i);
@@ -162,11 +188,12 @@ public class MainActivity extends AppCompatActivity {
             } finally {
                 urlConnection.disconnect();
             }
-            return null;
+            return usu;
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(List<Usuario> result) {
+
         }
 
         @Override
