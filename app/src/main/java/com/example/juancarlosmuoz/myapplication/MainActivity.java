@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tv1;
     private ListView lv1;
+    ArrayAdapter<String> adaptador;
+
     getInformacion getInfo=new getInformacion();
 
 
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        lv1 = (ListView)findViewById(R.id.list1);
 
     }
 
@@ -64,6 +68,18 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             List<Usuario>usu= getInfo.get();
+
+
+            String[] nombres = new String[usu.size()];
+          
+            for (int i=0; i<usu.size(); i++){
+             nombres[i]=usu.get(i).nombre;
+             System.out.println("indice"+i);
+            }
+
+            adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,nombres);
+
+            lv1.setAdapter(adaptador);
 
         } catch (InterruptedException e1) {
             e1.printStackTrace();
@@ -191,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             return usu;
         }
 
-        @Override
+     /*   @Override
         protected void onPostExecute(List<Usuario> result) {
 
         }
@@ -202,6 +218,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Void... values) {
-        }
+        }*/
     }
 }
