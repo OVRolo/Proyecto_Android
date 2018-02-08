@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> adaptador;
 
     getInformacion getInfo=new getInformacion();
-
-
+    List<Usuario>usu;
+    String[] nombres;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         lv1 = (ListView)findViewById(R.id.list1);
-
+        getInfo.execute("");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-         getInfo.execute("");
+
     }
 
     @Override
@@ -67,11 +67,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         try {
-            List<Usuario>usu= getInfo.get();
+            usu= getInfo.get();
+            nombres = new String[usu.size()];
 
-
-            String[] nombres = new String[usu.size()];
-          
             for (int i=0; i<usu.size(); i++){
              nombres[i]=usu.get(i).nombre;
              System.out.println("indice"+i);
@@ -80,6 +78,17 @@ public class MainActivity extends AppCompatActivity {
             adaptador = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,nombres);
 
             lv1.setAdapter(adaptador);
+
+            lv1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                    Usuario datos=usu.get(i);
+
+                    Intent parametro=new Intent(MainActivity.this,pagina2.class);
+                    parametro.putExtra("usu", datos);
+                    startActivity(parametro);
+                }
+            });
 
         } catch (InterruptedException e1) {
             e1.printStackTrace();
