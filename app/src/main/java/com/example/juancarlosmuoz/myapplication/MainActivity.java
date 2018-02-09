@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tv1;
     private ListView lv1;
+
     ArrayAdapter<String> adaptador;
 
     getInformacion getInfo=new getInformacion();
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         lv1 = (ListView)findViewById(R.id.list1);
+
         getInfo.execute("");
     }
 
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     Usuario datos=usu.get(i);
 
                     Intent parametro=new Intent(MainActivity.this,pagina2.class);
-                    parametro.putExtra("usu", datos);
+                    parametro.putExtra("editar", datos);
                     startActivity(parametro);
                 }
             });
@@ -98,7 +101,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    public void Añadir(View view) {
+        Intent parametro=new Intent(this,pagina2.class);
+        parametro.putExtra("añadir", "1");
+        startActivity(parametro);
+    }
 
 
 
