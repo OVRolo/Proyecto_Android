@@ -1,5 +1,6 @@
 package com.example.juancarlosmuoz.myapplication;
 
+import android.content.Intent;
 import android.drm.DrmStore;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -101,6 +102,9 @@ public class pagina2 extends AppCompatActivity {
     }
 
     public void salir(View v) {
+        Intent parametro=new Intent(this,MainActivity.class);
+      //  parametro.putExtra("editar", datos);
+        startActivity(parametro);
         finish();
     }
 
@@ -118,10 +122,11 @@ public class pagina2 extends AppCompatActivity {
         protected String doInBackground(String... params) {
             try {
 
-                URL url = new URL("http://10.21.101.30:8080/CRUD.asmx/getTable"); // here is your URL path
+                URL url = new URL("http://10.21.101.24:8080/CRUD.asmx/delete"); // here is your URL path
 
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("id", 2);
+
+                postDataParams.put("id", params[0]);
                 Log.e("params",postDataParams.toString());
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -135,7 +140,7 @@ public class pagina2 extends AppCompatActivity {
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(os, "UTF-8"));
                 writer.write(getPostDataString(postDataParams));
-
+//
                 writer.flush();
                 writer.close();
                 os.close();
