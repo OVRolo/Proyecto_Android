@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -43,7 +46,7 @@ public class pagina2 extends AppCompatActivity {
     private EditText etTelefono;
     private EditText etEmail;
     private EditText etPuesto;
-
+    private Spinner spinner;
 
 
     @Override
@@ -62,6 +65,13 @@ public class pagina2 extends AppCompatActivity {
             for (String key : bundle.keySet()) {
                 llave=key;
             }
+
+
+            spinner = (Spinner) findViewById(R.id.spinner);
+            String []opciones={"MH07","CID","ESCUELA","AYUNTAMIENTO","TDA"};
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, opciones);
+            spinner.setAdapter(adapter);
+
         }
 
         switch (llave){
@@ -77,6 +87,8 @@ public class pagina2 extends AppCompatActivity {
                 etEmail.setEnabled(false);
                 etPuesto.setText(usu.getPuesto());
                 etPuesto.setEnabled(false);
+                spinner.setSelection(usu.getOrganizacion_id());
+                spinner.setEnabled(false);
             }
 
             case "añadir":{
@@ -121,20 +133,36 @@ public class pagina2 extends AppCompatActivity {
             etTelefono.setEnabled(true);
             etEmail.setEnabled(true);
             etPuesto.setEnabled(true);
+            spinner.setEnabled(true);
             prue=1;
         }
         else {
+            org_desplegable();
             String nombre = etNombre.getText().toString();
             String apellido = etApellido.getText().toString();
             String telefono = etTelefono.getText().toString();
             String email = etEmail.getText().toString();
             String puesto = etPuesto.getText().toString();
+            String organizacion_id = Integer.toString(usu.getOrganizacion_id());
             int id= usu.id;
             String ID=Integer.toString(id);
             llave = "actualizar";
-            delete.execute(llave,ID, nombre, apellido, telefono, email, puesto);
+            delete.execute(llave,ID, nombre, apellido, telefono, email, puesto,organizacion_id);
             prue=0;
         }
+    }
+
+    public void  org_desplegable() {
+
+        String selec=spinner.getSelectedItem().toString();
+        switch(selec){
+            case "MH07": usu.setOrganizacion_id(1); break;
+            case "CID": usu.setOrganizacion_id(2); break;
+            case "ESCUELA": usu.setOrganizacion_id(3); break;
+            case "AYUNTAMIENTO": usu.setOrganizacion_id(4); break;
+            case "TDA": usu.setOrganizacion_id(4); break;
+        }
+
     }
 
     public void salir(View v) {
@@ -169,17 +197,18 @@ public class pagina2 extends AppCompatActivity {
 
                 switch (params[0]){
                     case "actualizar":{
-                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/update"); // here is your URL path
+                        url = new URL("http://10.21.101.24:8080/CRUD.asmx/update"); // here is your URL path
                         postDataParams.put("id", params[1]);
-                        postDataParams.put("nombre", params[2]);
-                        postDataParams.put("apellido", params[3]);
-                        postDataParams.put("telefono", params[4]);
-                        postDataParams.put("email", params[5]);
-                        postDataParams.put("puesto", params[6]);
+                        postDataParams.put("nom", params[2]);
+                        postDataParams.put("ape", params[3]);
+                        postDataParams.put("tlfn", params[4]);
+                        postDataParams.put("ema", params[5]);
+                        postDataParams.put("puest", params[6]);
+                        postDataParams.put("org",params[7] );
                         break;
                     }
                     case "añadir":{
-                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/delete"); // here is your URL path
+                        url = new URL("http://10.21.101.24:8080/CRUD.asmx/delete"); // here is your URL path
                         postDataParams.put("nombre", params[1]);
                         postDataParams.put("apellido", params[2]);
                         postDataParams.put("telefono", params[3]);
@@ -188,7 +217,7 @@ public class pagina2 extends AppCompatActivity {
                         break;
                     }
                     case "borrar":{
-                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/delete"); // here is your URL path
+                        url = new URL("http://10.21.101.24:8080/CRUD.asmx/delete"); // here is your URL path
                         postDataParams.put("id", params[1]);
                         break;
                     }
@@ -230,7 +259,7 @@ public class pagina2 extends AppCompatActivity {
                     }
 
                     in.close();
-                    return sb.toString();
+                    return null;
 
                 }
                 else {

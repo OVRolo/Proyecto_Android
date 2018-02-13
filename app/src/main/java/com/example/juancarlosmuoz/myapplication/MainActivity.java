@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             List<Usuario> usu=new ArrayList<Usuario>();
 
             try {
-                url = new URL("http://10.21.101.30:8080/CRUD.asmx/getTable");
+                url = new URL("http://10.21.101.24:8080/CRUD.asmx/getTable");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
