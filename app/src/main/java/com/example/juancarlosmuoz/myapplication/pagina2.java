@@ -37,11 +37,13 @@ public class pagina2 extends AppCompatActivity {
 
     String llave;
     Usuario usu;
+    int prue=0;
     private EditText etNombre;
     private EditText etApellido;
     private EditText etTelefono;
     private EditText etEmail;
     private EditText etPuesto;
+
 
 
     @Override
@@ -77,7 +79,16 @@ public class pagina2 extends AppCompatActivity {
                 etPuesto.setEnabled(false);
             }
 
-            case "añadir":{}
+            case "añadir":{
+                /*setDelete delete=new setDelete();
+                String nombre= etNombre.getText().toString();
+                String apellido= etApellido.getText().toString();
+                String telefono= etTelefono.getText().toString();
+                String email= etEmail.getText().toString();
+                String puesto= etPuesto.getText().toString();
+                delete.execute(llave,nombre,apellido,telefono,email,puesto);*/
+
+            }
         }
 
 
@@ -96,9 +107,34 @@ public class pagina2 extends AppCompatActivity {
 
         int id= usu.id;
         String ID=Integer.toString(id);
+        llave="borrar";
+        delete.execute(llave,ID);
 
-        delete.execute(ID);
+    }
 
+    public void actualizar(View v){
+
+        setDelete delete=new setDelete();
+        if(prue==0) {
+            etNombre.setEnabled(true);
+            etApellido.setEnabled(true);
+            etTelefono.setEnabled(true);
+            etEmail.setEnabled(true);
+            etPuesto.setEnabled(true);
+            prue=1;
+        }
+        else {
+            String nombre = etNombre.getText().toString();
+            String apellido = etApellido.getText().toString();
+            String telefono = etTelefono.getText().toString();
+            String email = etEmail.getText().toString();
+            String puesto = etPuesto.getText().toString();
+            int id= usu.id;
+            String ID=Integer.toString(id);
+            llave = "actualizar";
+            delete.execute(llave,ID, nombre, apellido, telefono, email, puesto);
+            prue=0;
+        }
     }
 
     public void salir(View v) {
@@ -120,13 +156,45 @@ public class pagina2 extends AppCompatActivity {
     class setDelete extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
+
+
+
             try {
 
-                URL url = new URL("http://10.21.101.24:8080/CRUD.asmx/delete"); // here is your URL path
 
+                URL url=null;
                 JSONObject postDataParams = new JSONObject();
 
-                postDataParams.put("id", params[0]);
+
+
+                switch (params[0]){
+                    case "actualizar":{
+                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/update"); // here is your URL path
+                        postDataParams.put("id", params[1]);
+                        postDataParams.put("nombre", params[2]);
+                        postDataParams.put("apellido", params[3]);
+                        postDataParams.put("telefono", params[4]);
+                        postDataParams.put("email", params[5]);
+                        postDataParams.put("puesto", params[6]);
+                        break;
+                    }
+                    case "añadir":{
+                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/delete"); // here is your URL path
+                        postDataParams.put("nombre", params[1]);
+                        postDataParams.put("apellido", params[2]);
+                        postDataParams.put("telefono", params[3]);
+                        postDataParams.put("email", params[4]);
+                        postDataParams.put("puesto", params[5]);
+                        break;
+                    }
+                    case "borrar":{
+                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/delete"); // here is your URL path
+                        postDataParams.put("id", params[1]);
+                        break;
+                    }
+                }
+
+
                 Log.e("params",postDataParams.toString());
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
