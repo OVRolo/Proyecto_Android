@@ -103,7 +103,7 @@ public class pagina2 extends AppCompatActivity {
                 etEmail.setEnabled(false);
                 etPuesto.setText(usu.getPuesto());
                 etPuesto.setEnabled(false);
-                spinner.setSelection(usu.getOrganizacion_id());
+                spinner.setSelection(usu.getOrganizacion_id()-1);
                 spinner.setEnabled(false);
             }
 
@@ -214,7 +214,7 @@ public class pagina2 extends AppCompatActivity {
 
                 switch (params[0]){
                     case "actualizar":{
-                        url = new URL("http://10.21.101.24:8080/CRUD.asmx/update"); // here is your URL path
+                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/update"); // here is your URL path
                         postDataParams.put("id", params[1]);
                         postDataParams.put("nom", params[2]);
                         postDataParams.put("ape", params[3]);
@@ -225,7 +225,7 @@ public class pagina2 extends AppCompatActivity {
                         break;
                     }
                     case "añadir":{
-                        url = new URL("http://10.21.101.24:8080/CRUD.asmx/delete"); // here is your URL path
+                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/delete"); // here is your URL path
                         postDataParams.put("nombre", params[1]);
                         postDataParams.put("apellido", params[2]);
                         postDataParams.put("telefono", params[3]);
@@ -234,7 +234,7 @@ public class pagina2 extends AppCompatActivity {
                         break;
                     }
                     case "borrar":{
-                        url = new URL("http://10.21.101.24:8080/CRUD.asmx/delete"); // here is your URL path
+                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/delete"); // here is your URL path
                         postDataParams.put("id", params[1]);
                         break;
                     }
@@ -322,7 +322,7 @@ public class pagina2 extends AppCompatActivity {
         List<organizacion> organizacion=new ArrayList<organizacion>();
 
         try {
-            url = new URL("http://10.21.101.24:8080/CRUD.asmx/orgConsulta");
+            url = new URL("http://10.21.101.30:8080/CRUD.asmx/orgConsulta");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
