@@ -1,12 +1,5 @@
 package com.example.juancarlosmuoz.myapplication;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import java.util.Hashtable;
-
-import org.ksoap2.serialization.KvmSerializable;
-import org.ksoap2.serialization.PropertyInfo;
-
 
 import java.io.Serializable;
 
@@ -84,4 +77,6 @@ public class Usuario implements Serializable  {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
+
+
 }

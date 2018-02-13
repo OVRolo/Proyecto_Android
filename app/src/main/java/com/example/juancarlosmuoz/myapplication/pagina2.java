@@ -33,6 +33,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -47,7 +48,8 @@ public class pagina2 extends AppCompatActivity {
     private EditText etEmail;
     private EditText etPuesto;
     private Spinner spinner;
-
+    getOrganizacion getOrg;
+    List<organizacion>listaOrg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,17 @@ public class pagina2 extends AppCompatActivity {
         etEmail=(EditText)findViewById(R.id.etEmail);
         etPuesto=(EditText)findViewById(R.id.etPuesto);
 
+        getOrg=new getOrganizacion();
+        getOrg.execute();
+        try {
+            listaOrg=getOrg.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             for (String key : bundle.keySet()) {
@@ -68,7 +81,10 @@ public class pagina2 extends AppCompatActivity {
 
 
             spinner = (Spinner) findViewById(R.id.spinner);
-            String []opciones={"MH07","CID","ESCUELA","AYUNTAMIENTO","TDA"};
+            String []opciones=new String[listaOrg.size()];
+            for (int i=0; i<listaOrg.size(); i++){
+                opciones[i]=listaOrg.get(i).organizacion;
+            }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, opciones);
             spinner.setAdapter(adapter);
 
@@ -155,12 +171,13 @@ public class pagina2 extends AppCompatActivity {
     public void  org_desplegable() {
 
         String selec=spinner.getSelectedItem().toString();
+
         switch(selec){
-            case "MH07": usu.setOrganizacion_id(1); break;
-            case "CID": usu.setOrganizacion_id(2); break;
-            case "ESCUELA": usu.setOrganizacion_id(3); break;
-            case "AYUNTAMIENTO": usu.setOrganizacion_id(4); break;
-            case "TDA": usu.setOrganizacion_id(4); break;
+            case "MH07": usu.setOrganizacion_id(listaOrg.get(0).id); break;
+            case "CID": usu.setOrganizacion_id(listaOrg.get(1).id); break;
+            case "ESCUELA": usu.setOrganizacion_id(listaOrg.get(2).id); break;
+            case "AYUNTAMIENTO": usu.setOrganizacion_id(listaOrg.get(3).id); break;
+            case "TDA": usu.setOrganizacion_id(listaOrg.get(4).id); break;
         }
 
     }
@@ -296,5 +313,107 @@ public class pagina2 extends AppCompatActivity {
             return result.toString();
         }
 
+}
 
+    class getOrganizacion extends AsyncTask<String, Void, List<organizacion>> {
+    @Override
+    protected List<organizacion> doInBackground(String... params) {
+        URL url = null;
+        List<organizacion> organizacion=new ArrayList<organizacion>();
+
+        try {
+            url = new URL("http://10.21.101.24:8080/CRUD.asmx/orgConsulta");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        HttpURLConnection urlConnection = null;
+
+        try {
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Content-Type","application/json");
+            urlConnection.setRequestMethod("POST");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            InputStream in = urlConnection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            StringBuilder out = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
+            }
+            String res = out.toString();
+            System.out.println(out.toString()); //Prints the string content read from input stream
+            reader.close();
+
+            JSONObject jsonObj = new JSONObject(res);
+
+              /*  JSONObject jsonObj = null;
+                try {
+                    jsonObj = XML.toJSONObject(res);
+                } catch (JSONException e) {
+                    Log.e("JSON exception", e.getMessage());
+                    e.printStackTrace();
+                }*/
+            Iterator<String> keys = jsonObj.keys();
+            String key = keys.next();
+
+            JSONArray data= jsonObj.getJSONArray(key);
+            //  JSONObject dat=data.getJSONObject(0);
+            // String  nombre=dat.get("nombre").toString();
+            //Log.i("nombre", "dato "+nombre);
+
+
+
+            for (int i=0; i<data.length(); i++){
+                JSONObject dat=data.getJSONObject(i);
+
+                int  id=(int)dat.get("id");
+                String  org=dat.get("org").toString();
+
+
+                organizacion.add(new organizacion(id,org));
+            }
+
+
+               /*Object datos;
+
+                try {
+
+                    //Obtenemos los objetos dentro del objeto principal.
+                    Iterator<String> keys = jsonObj.keys();
+
+                    while (keys.hasNext())
+                    {
+                        // obtiene el nombre del objeto.
+                        String key = keys.next();
+                        Log.i("Parser", "objeto : " + key);
+                        JSONObject jsonObject = jsonObj.getJSONObject(key);
+
+                        //obtiene valores dentro del objeto.
+                       datos = jsonObject.get("Usuario");
+
+
+                        //Imprimimos los valores.
+                        Log.i("Parser", ""+datos);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e("Parser", e.getMessage());
+                }*/
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            urlConnection.disconnect();
+        }
+        return organizacion;
     }
+}
