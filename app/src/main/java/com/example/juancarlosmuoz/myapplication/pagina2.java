@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -50,6 +51,12 @@ public class pagina2 extends AppCompatActivity {
     private Spinner spinner;
     getOrganizacion getOrg;
     List<organizacion>listaOrg;
+    private Button btn_insertar;
+    private Button btnActualizar;
+    private Button btn_Borrar;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,9 @@ public class pagina2 extends AppCompatActivity {
         etTelefono=(EditText)findViewById(R.id.etTelefono);
         etEmail=(EditText)findViewById(R.id.etEmail);
         etPuesto=(EditText)findViewById(R.id.etPuesto);
+        btn_insertar=(Button)findViewById(R.id.btn_insertar);
+        btnActualizar=(Button)findViewById(R.id.btnActualizar);
+        btn_Borrar=(Button)findViewById(R.id.btnBorrar);
 
         getOrg=new getOrganizacion();
         getOrg.execute();
@@ -105,9 +115,18 @@ public class pagina2 extends AppCompatActivity {
                 etPuesto.setEnabled(false);
                 spinner.setSelection(usu.getOrganizacion_id()-1);
                 spinner.setEnabled(false);
+                btn_insertar.setVisibility(View.INVISIBLE);
+                btn_insertar.setEnabled(false);
+                break;
             }
 
             case "añadir":{
+                btn_Borrar.setVisibility(View.INVISIBLE);
+                btn_Borrar.setEnabled(false);
+                btnActualizar.setVisibility(View.INVISIBLE);
+                btnActualizar.setEnabled(false);
+
+
                 /*setDelete delete=new setDelete();
                 String nombre= etNombre.getText().toString();
                 String apellido= etApellido.getText().toString();
@@ -115,13 +134,9 @@ public class pagina2 extends AppCompatActivity {
                 String email= etEmail.getText().toString();
                 String puesto= etPuesto.getText().toString();
                 delete.execute(llave,nombre,apellido,telefono,email,puesto);*/
-
+                break;
             }
         }
-
-
-
-
        // int numero = (int)getIntent().getSerializableExtra("vacio");
     }
 
@@ -165,6 +180,12 @@ public class pagina2 extends AppCompatActivity {
             llave = "actualizar";
             delete.execute(llave,ID, nombre, apellido, telefono, email, puesto,organizacion_id);
             prue=0;
+            etNombre.setEnabled(false);
+            etApellido.setEnabled(false);
+            etTelefono.setEnabled(false);
+            etEmail.setEnabled(false);
+            etPuesto.setEnabled(false);
+            spinner.setEnabled(false);
         }
     }
 
@@ -188,11 +209,6 @@ public class pagina2 extends AppCompatActivity {
         startActivity(parametro);
         finish();
     }
-
-    /**
-     * Created by Juan Carlos Muñoz on 24/01/2018.
-     */
-
 
 }
 

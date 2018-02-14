@@ -108,16 +108,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(parametro);
     }
 
-
-
-
-
-
-
-
-
-
-
     private class getInformacion extends AsyncTask<String, Void, List<Usuario>> {
         @Override
         protected List<Usuario> doInBackground(String... params) {
