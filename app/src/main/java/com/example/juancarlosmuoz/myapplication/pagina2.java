@@ -42,6 +42,7 @@ public class pagina2 extends AppCompatActivity {
 
     String llave;
     Usuario usu;
+    setDelete delete;
     int prue=0;
     private EditText etNombre;
     private EditText etApellido;
@@ -157,7 +158,7 @@ public class pagina2 extends AppCompatActivity {
 
     public void actualizar(View v){
 
-        setDelete delete=new setDelete();
+        delete=new setDelete();
         if(prue==0) {
             etNombre.setEnabled(true);
             etApellido.setEnabled(true);
@@ -203,6 +204,20 @@ public class pagina2 extends AppCompatActivity {
 
     }
 
+    public void añadir(View v) {
+        delete=new setDelete();
+        String nombre = etNombre.getText().toString();
+        String apellido = etApellido.getText().toString();
+        String telefono = etTelefono.getText().toString();
+        String email = etEmail.getText().toString();
+        String puesto = etPuesto.getText().toString();
+        String organizacion_id =Integer.toString(spinner.getSelectedItemPosition()+1) ;
+        int id= 0;
+        String ID=Integer.toString(id);
+        llave = "añadir";
+        delete.execute(llave,ID, nombre, apellido, telefono, email, puesto,organizacion_id);
+    }
+
     public void salir(View v) {
         Intent parametro=new Intent(this,MainActivity.class);
       //  parametro.putExtra("editar", datos);
@@ -230,7 +245,7 @@ public class pagina2 extends AppCompatActivity {
 
                 switch (params[0]){
                     case "actualizar":{
-                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/update"); // here is your URL path
+                        url = new URL("http://10.21.101.24:8080/CRUD.asmx/update"); // here is your URL path
                         postDataParams.put("id", params[1]);
                         postDataParams.put("nom", params[2]);
                         postDataParams.put("ape", params[3]);
@@ -241,16 +256,18 @@ public class pagina2 extends AppCompatActivity {
                         break;
                     }
                     case "añadir":{
-                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/delete"); // here is your URL path
-                        postDataParams.put("nombre", params[1]);
-                        postDataParams.put("apellido", params[2]);
-                        postDataParams.put("telefono", params[3]);
-                        postDataParams.put("email", params[4]);
-                        postDataParams.put("puesto", params[5]);
+                        url = new URL("http://10.21.101.24:8080/CRUD.asmx/insert"); // here is your URL path
+                        postDataParams.put("id", params[1]);
+                        postDataParams.put("nom", params[2]);
+                        postDataParams.put("ape", params[3]);
+                        postDataParams.put("tlfn", params[4]);
+                        postDataParams.put("ema", params[5]);
+                        postDataParams.put("puest", params[6]);
+                        postDataParams.put("org",params[7] );
                         break;
                     }
                     case "borrar":{
-                        url = new URL("http://10.21.101.30:8080/CRUD.asmx/delete"); // here is your URL path
+                        url = new URL("http://10.21.101.24:8080/CRUD.asmx/delete"); // here is your URL path
                         postDataParams.put("id", params[1]);
                         break;
                     }
@@ -338,7 +355,7 @@ public class pagina2 extends AppCompatActivity {
         List<organizacion> organizacion=new ArrayList<organizacion>();
 
         try {
-            url = new URL("http://10.21.101.30:8080/CRUD.asmx/orgConsulta");
+            url = new URL("http://10.21.101.24:8080/CRUD.asmx/orgConsulta");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
